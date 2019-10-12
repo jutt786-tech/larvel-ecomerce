@@ -152,7 +152,7 @@
                 </div>
                 <hr class="mb-4">
                 <div class="custom-control custom-checkbox">
-                    <input name="shipping_address" value="true" type="checkbox" class="custom-control-input" id="same-address">
+                    <input name="shipping_address"  type="checkbox" class="custom-control-input" id="same-address">
                     <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
                 </div>
                 <div class="custom-control custom-checkbox">

@@ -3,6 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="405ca00b-687e-4ce3-be2b-da81a585799c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/OrderController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/OrderController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Order.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Order.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2019_10_10_070357_create_orders_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/admin/category/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/admin/category/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/products/checkout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/products/checkout.blade.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -158,7 +164,7 @@
       <workItem from="1570443268075" duration="17729000" />
       <workItem from="1570535808137" duration="62146000" />
       <workItem from="1570683515297" duration="59649000" />
-      <workItem from="1570862507479" duration="562000" />
+      <workItem from="1570862507479" duration="18828000" />
     </task>
     <servers />
   </component>

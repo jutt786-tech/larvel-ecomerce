@@ -103,7 +103,7 @@
 
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <button class="btn btn-primary" >@if(isset($category->id)) Update @else Submit  @endif</button>
+                            <button class="btn btn-primary" >{{isset($category->id)? 'update' :'Submit'}}</button>
                         </div>
                     </div>
 

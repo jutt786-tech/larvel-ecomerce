@@ -68,9 +68,11 @@
                                 </li>
                             @endif
                         @else
-                            <li><span class="btn btn-outline-dark font-weight-bold">
+                            <li><a href="{{url('cart')}}" ><span class="btn btn-outline-dark font-weight-bold">
                                   CART  &nbsp;&nbsp;&nbsp;&nbsp;
                                     {{Session::has('cart') ? count(Session::get("cart")) : 0}}
+                                    </span>
+                                </a>
                             </li>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             {{auth()->user()->role->name}}
