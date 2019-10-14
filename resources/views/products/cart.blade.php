@@ -89,6 +89,11 @@
                 <tr>
                     <th colspan="2">Total Price: </th>
                     <td>{{$total}}</td>
+                    <td>
+                    <td class="text-right">
+                        <a href="{{url('checkout')}}" class="btn btn-dark btn-lg " >checkout</a>
+                    </td>
+                    </td>
                 </tr>
                 </tbody>
 
@@ -126,7 +131,8 @@
                     method: "DELETE",
                     data: {_token: '{{ csrf_token() }}', id: removeid},
                     success: function (response) {
-                        window.location.reload();
+                        returen (response);
+                        // window.location.reload();
                     }
                 });
             }

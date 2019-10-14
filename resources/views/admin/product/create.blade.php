@@ -86,8 +86,8 @@
 
                     <div class="form-group row">
                         <div class="col-md-8 col-md-offset-2">
-                            <label for="discount_price">Discount Price</label>
-                            <input id="net" readonly onClick="sum()" value="{{isset($product->discount_price) ? $product->discount_price : ''}}" type="text" class="form-control @error('discount_price') is-invalid @enderror"   name="discount_price"  placeholder="Enter your discount_price">
+                            <label for="discount_price">Discount Price %</label>
+                            <input id="net" readonly onload="sum()" value="{{isset($product->discount_price) ? $product->discount_price : ''}}" type="text" class="form-control @error('discount_price') is-invalid @enderror"   name="discount_price"  placeholder="Enter your discount_price">
                             @error('discount_price')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -99,7 +99,7 @@
                     @if(isset($categories))
                         <div class="form-group row">
                             <div class="col-md-8 col-md-offset-2">
-                                <label for="Title">Enter category</label>
+                                <label for="category">Enter category</label>
                                 <select class="form-control @error('category') is-invalid @enderror" name="category[]" multiple>
                                     @foreach($categories as $category)
                                         <option value="{{$category->id}}"
@@ -119,12 +119,12 @@
                         <div class="form-group row">
                             <div class="col-md-8 col-md-offset-2">
                                 <label for="Title">Enter category</label>
-                                <select class="form-control @error('category') is-invalid @enderror" name="category[]" multiple>
+                                <select class="form-control @error('category[]') is-invalid @enderror" name="category[]" multiple>
                                     @foreach($categories as $category)
                                         <option value="{{$category->id}}">{{$category->title}}</option>
                                     @endforeach
                                 </select>
-                                @error('category')
+                                @error('category[]')
                                 <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>

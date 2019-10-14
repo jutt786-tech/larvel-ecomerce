@@ -27,26 +27,4 @@
 @section('footer')
     @include('layouts.partials.footer')
     @endsection
-@section('script')
-    <script >
-    function btnAddCart(id) {
 
-    var product_id = id;
-
-    var url = "{{route('products.addToCart','product_id')}}";
-    // alert(url);
-    $.ajax({
-    type: "POST",
-    url: url,
-    data: { product_id: product_id },
-    success: function (data) {
-
-    console.log(data);
-    },
-    error: function (data) {
-    console.log('Error:', data);
-    }
-    });
-    }
-    </script>
-@endsection

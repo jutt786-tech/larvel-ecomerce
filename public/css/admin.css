@@ -115,3 +115,10 @@ body {
   overflow-y: scroll;
 }
 
+.my-card {
+  position: absolute;
+  left: 40%;
+  top: -20px;
+  border-radius: 50%;
+}
+

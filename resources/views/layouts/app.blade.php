@@ -58,6 +58,13 @@
                                 </a>
                             </div>
 
+                        <li><a href="{{url('cart')}}" ><span class="btn btn-outline-dark font-weight-bold">
+                                  CART  &nbsp;&nbsp;&nbsp;&nbsp;
+                                    {{Session::has('cart') ? count(Session::get("cart")) : 0}}
+                                    </span>
+                            </a>
+                        </li>
+
                         @guest
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -68,12 +75,7 @@
                                 </li>
                             @endif
                         @else
-                            <li><a href="{{url('cart')}}" ><span class="btn btn-outline-dark font-weight-bold">
-                                  CART  &nbsp;&nbsp;&nbsp;&nbsp;
-                                    {{Session::has('cart') ? count(Session::get("cart")) : 0}}
-                                    </span>
-                                </a>
-                            </li>
+
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                             {{auth()->user()->role->name}}
                             <li class="nav-item dropdown">

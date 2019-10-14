@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class AdminController extends Controller
 {
@@ -11,9 +13,18 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+//        $this->middleware('AdminVerify');
+    }
 
     public function dashboard(){
+
+        if (Auth::check()){
         return view('admin.dashboard');
+        }else{
+     return redirect(route('login'));
+        }
     }
 
     public function index()

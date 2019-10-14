@@ -21,6 +21,9 @@ class AdminAuthenticate
 
         if (auth()->user()->role->name == 'admin'){
             return redirect(route('admin.dashboard'));
+        }else{
+
+            return redirect(route('login'));
         }
         return $next($request);
     }

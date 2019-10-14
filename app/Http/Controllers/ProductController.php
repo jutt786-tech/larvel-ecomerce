@@ -9,7 +9,9 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\AbstractList;
 use App\Cart;
+use PhpParser\Node\Stmt\DeclareDeclare;
 use Session;
+use App\Http\Requests\productRequest;
 
 class ProductController extends Controller
 {
@@ -22,7 +24,7 @@ class ProductController extends Controller
     {
         //
       $products = Product::with('categories')->get();
-//      dd($products);
+
         return view('admin.product.index',compact('products'));
     }
 
@@ -44,14 +46,14 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(productRequest $request)
     {
 //        dd($request->all());
-        Validator::make($request->all(), [
-            'pname' => 'required|unique:products|max:255',
-            'description' => 'required',
-            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ])->validate();
+//        Validator::make($request->all(), [
+//            'pname' => 'required|unique:products|max:255',
+//            'description' => 'required',
+//            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+//        ])->validate();
         if($request->hasFile('img')) {
             $image       = $request->file('img');
             $filename    = $image->getClientOriginalName();
@@ -86,9 +88,12 @@ class ProductController extends Controller
     {
         //
 //        dd(Session::get('cart'));
-       $products= Product::all();
-       $categories= Category::all();
-        return  view('products.all',compact('products','categories'));
+       $lastproducts = Product::latest('id')->first();
+//dd($lastproducts);
+        $products= Product::all();
+       $categories= Category::with('children')->get();
+//       dd($categories);
+        return  view('products.all',compact('products','categories','lastproducts'));
     }
 
     public function single(Product $product){
@@ -143,7 +148,7 @@ class ProductController extends Controller
             "img" => $product->img
         ];
         Session::put('cart', $cart);
-        return back()->with('message','Product added to cart successfully!');
+//        return back()->with('message','Product added to cart successfully!');
         return redirect()->back()->with('message', 'Product added to cart successfully!');
     }
 
@@ -236,16 +241,16 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(productRequest $request, $id)
     {
         //
 
 //        dd($request->all());
-        Validator::make($request->all(), [
-            'pname' => 'required|max:255',
-            'description' => 'required',
-            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-        ])->validate();
+//        Validator::make($request->all(), [
+//            'pname' => 'required|max:255',
+//            'description' => 'required',
+//            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+//        ])->validate();
         if($request->hasFile('img')) {
 
             $image = $request->file('img');
