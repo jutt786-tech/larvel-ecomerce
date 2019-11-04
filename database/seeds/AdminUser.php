@@ -33,8 +33,7 @@ class AdminUser extends Seeder
        ]);
 
       Profile::create([
-      			'user_id' => $user->id
-
+      			'user_id' => $use
       ]);
 
 

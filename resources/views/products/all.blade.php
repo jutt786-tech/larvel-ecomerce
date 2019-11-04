@@ -1,8 +1,8 @@
-@extends('layouts.app')
+    @extends('layouts.app')
 @section('sidebar')
-    @parent
+{{--    @parent--}}
     @include('layouts.partials.sidebar')
-    @endsection
+@endsection
 @section('text')
     <div class="row">
         <div class="col-md-12">
@@ -19,12 +19,69 @@
         </div>
     </div>
 @endsection
-
 @section('contents')
     @include('layouts.partials.product')
-    @endsection
+@endsection
 
 @section('footer')
     @include('layouts.partials.footer')
-    @endsection
+@endsection
 
+@section('script')
+    <script>
+        $(function(){
+
+            $(".addtocart").click(function (e) {
+                e.preventDefault();
+                var product_id =  $(this).attr("data-id"); //get product attributes id
+                $.ajax({
+                    url: '{{ url('products/addToCart')}}/'+product_id,
+                    method: "GET",
+                    id: product_id,
+                    dataType: 'JSON',
+                    data: {_token: '{{ csrf_token() }}', id: product_id},
+                    success: function (response) {
+                        console.log(response);
+                        swal({
+                            title: "Added!",
+                            text: response.message,
+                            type: "success",
+                            timer: 2000
+                        });
+
+                        $('#count').empty()
+                            .append('CART '+Object.keys(response.cart).length);
+                    }
+
+                });
+            });
+        });
+
+
+
+
+
+
+
+        //strt old code
+
+        // $('.acnav__label').click(function () {
+        //     var label = $(this);
+        //     var parent = label.parent('.has-children');
+        //     var list = label.siblings('.acnav__list');
+        //
+        //     if ( parent.hasClass('is-open') ) {
+        //         list.slideUp('fast');
+        //         parent.removeClass('is-open');
+        //     }
+        //     else {
+        //         list.slideDown('fast');
+        //         parent.addClass('is-open');
+        //     }
+        // });
+        // ==============
+
+
+
+    </script>
+@endsection

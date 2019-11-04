@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\CategoryParent;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\AbstractList;
 use App\Cart;
 use PhpParser\Node\Stmt\DeclareDeclare;
-use Session;
 use App\Http\Requests\productRequest;
 
 class ProductController extends Controller
@@ -22,10 +23,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
-      $products = Product::with('categories')->get();
-
-        return view('admin.product.index',compact('products'));
+        $products = Product::with('categories')->get();
+        return view('admin.product.index', compact('products'));
     }
 
     /**
@@ -35,94 +34,80 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
-       $categories= Category::all();
-        return view('admin.product.create',compact('categories'));
+        $categories = Category::all();
+        return view('admin.product.create', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(productRequest $request)
     {
-//        dd($request->all());
-//        Validator::make($request->all(), [
-//            'pname' => 'required|unique:products|max:255',
-//            'description' => 'required',
-//            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-//        ])->validate();
-        if($request->hasFile('img')) {
-            $image       = $request->file('img');
-            $filename    = $image->getClientOriginalName();
+
+        if ($request->hasFile('img')) {
+            $image = $request->file('img');
+            $filename = $image->getClientOriginalName();
 
             $image_resize = Image::make($image->getRealPath());
             $image_resize->resize(300, 300);
-            $image_resize->save(public_path('images/' .$filename));
-            $uploadimage= $filename;
+            $image_resize->save(public_path('images/' . $filename));
+            $uploadimage = $filename;
 
         }
-       $product =Product::create([
+        $product = Product::create([
             'pname' => $request->pname,
             'description' => $request->description,
             'price' => $request->price,
             'discount' => $request->discount,
             'discount_price' => $request->discount_price,
-            'img'       => $uploadimage,
+            'img' => $uploadimage,
 
         ]);
         $product->categories()->attach($request->category);
-        return redirect(route('admin.product.index'))->with('message','Product add sucessfully');
+        return redirect(route('admin.product.index'))->with('message', 'Product add sucessfully');
 //        dd($product);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Product  $product
+     * @param \App\Product $product
      * @return \Illuminate\Http\Response
      */
     public function show(Product $product)
     {
-        //
-//        dd(Session::get('cart'));
-       $lastproducts = Product::latest('id')->first();
-//dd($lastproducts);
-        $products= Product::all();
-       $categories= Category::with('children')->get();
-//       dd($categories);
-        return  view('products.all',compact('products','categories','lastproducts'));
+        $lastproducts = Product::latest('id')->first();
+        $products = Product::all();
+
+        $categories = Category::whereNull('category_id')
+            ->with('childrenCategories')
+            ->get();
+
+        return view('products.all', compact('products', 'categories', 'lastproducts'));
     }
 
-    public function single(Product $product){
-        return view('products.single',['product'=> $product]);
+
+    public function single(Product $product)
+    {
+        return view('products.single', ['product' => $product]);
     }
-
-//    public function cartUpdate($cat_id, $qty)
-//    {
-//        $cart = Cart::find(('cat_id'));
-//        $product = Product::find($cart->product_id);
-//        $cart->no_of_items = Input::get('qty');
-//        $cart->price = $product->price * $cart->no_of_items;
-//        $cart->save();
-//    }
-
 
     public function addToCart($id)
     {
         $product = Product::find($id);
-        if(!$product) {
+        if (!$product) {
             abort(404);
         }
         $cart = Session::get('cart');
-        // if cart is empty then this the first product
-        if(!$cart) {
+        // if cart is empty then this the first product of session
+        if (!$cart) {
             $cart = [
                 $id => [
                     "pname" => $product->pname,
-                    "description"=> $product->description,
+                    "description" => $product->description,
                     "quantity" => 1,
                     "price" => $product->price,
                     "discount_price" => $product->discount_price,
@@ -130,94 +115,84 @@ class ProductController extends Controller
                 ]
             ];
             Session::put('cart', $cart);
-            return redirect()->back()->with('message', 'Product added to cart successfully!');
         }
-        // if cart not empty then check if this product exist then increment quantity
-        if(isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-            Session::put('cart', $cart);
-            return redirect()->back()->with('message', 'Product added to cart successfully!');
-        }
-        // if item not exist in cart then add to cart with quantity = 1
+
         $cart[$id] = [
             "pname" => $product->pname,
-            "description"=> $product->description,
+            "description" => $product->description,
             "quantity" => 1,
             "price" => $product->price,
             "discount_price" => $product->discount_price,
             "img" => $product->img
         ];
         Session::put('cart', $cart);
-//        return back()->with('message','Product added to cart successfully!');
-        return redirect()->back()->with('message', 'Product added to cart successfully!');
+
+        $response = array(
+            'status' => 'success',
+            'message' => 'Product has been Added sucessfully.',
+            'cart' => $cart,
+        );
+        return response()->json($response);
+    }
+
+    public function cart()
+    {
+        if (!session()->get('cart')){
+          return  redirect(route('products.all'));
+        }else {
+
+            if (!Session::has('cart') || empty(Session::get('cart') || empty($categories) || empty($lastproducts))) {
+                return view('products.all');
+            } else {
+                $carts = Session::get('cart');
+                $lastproducts = Product::latest('id')->first();
+                $categories = Category::whereNull('category_id')
+                    ->with('childrenCategories')
+                    ->get();
+
+                return view('products.cart', compact('carts', 'categories', 'lastproducts'));
+            }
+
+        }
     }
 
     public function updateProduct(Request $request)
     {
-        if($request->id and $request->quantity)
-        {
+        if ($request->id and $request->quantity) {
             $cart = session()->get('cart');
-            $cart[$request->id]["quantity"] = $request->quantity;
+            $q = $cart[$request->id]["quantity"] = $request->quantity;
+            $p = $cart[$request->id]['price'];
             session()->put('cart', $cart);
-            session()->flash('message', 'Cart updated successfully');
+            $response = array(
+                'price' => $p,
+                'status' => 'success',
+                'message' => 'Product has been updated.',
+                'cart' => $cart,
+                'newprice' => $p * $q,
+                'product_id' => $request->id
+            );
+            return response()->json($response);
         }
+
     }
 
     public function removeProduct(Request $request)
     {
-        if($request->id) {
+        if ($request->id) {
             $cart = session()->get('cart');
-            if(isset($cart[$request->id])) {
+            if (isset($cart[$request->id])) {
                 unset($cart[$request->id]);
                 session()->put('cart', $cart);
             }
-            session()->flash('message', 'Product removed successfully');
+            $response = array(
+                'status' => 'success',
+                'message' => 'product has been deleted Sucessfully.',
+                'cart' => $cart,
+                'product_id' => $request->id,
+            );
+            return response()->json($response);
         }
     }
-
-
-//    public  function addToCart(Product $product, Request $request){
-//          $oldCart = Session:: has('cart') ? Session::get('cart') : null;
-//          $qty = $request->qty ? $request->qty : 1;
-//          $cart = new Cart($oldCart);
-//          $cart->addProduct($product, $qty);
-//
-//        Session::put('cart',$cart);
-//        return back()->with('message',"Product .$product->pname. addtocart sucessfully");
-//    }
-
-
-    public function cart(){
-        if (!Session::has('cart')){
-            return view('products.cart');
-        }else{
-          $carts = Session::get('cart');
-            return view('products.cart',compact('carts'));
-        }
-    }
-
-//    public  function removeProduct(Product $product){
-//
-//      $oldCart =  Session::has('cart') ? Session::get('cart') : null;
-//        $cart = new Cart($oldCart);
-//        $cart->removeProduct($product);
-//
-//        Session::put('cart',$cart);
-////        session()->flush();
-//
-//        return back()->with('message',"Product .$product->pname. has sucessfully Delete" );
-//
-//    }
-//
-//    public  function updateProduct(Product $product, Request $request){
-////        dd('dd');
-//        $oldCart =  Session::has('cart') ? Session::get('cart') : null;
-//        $qty = $request->qty ? $request->qty : 1;
-//        $cart = new Cart($oldCart);
-//        $cart->updateProduct($product, $qty);
-//        Session::put('cart',$cart);
-//        return back()->with('message',"Product .$product->pname. has sucessfully Updated" );
-//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -227,10 +202,7 @@ class ProductController extends Controller
      */
     public function edit(Product  $product)
     {
-        //
        $categories= Category::all();
-
-//      dd($products);
       return view('admin.product.create',['categories'=> $categories , 'product'=>$product]);
     }
 
@@ -243,14 +215,7 @@ class ProductController extends Controller
      */
     public function update(productRequest $request, $id)
     {
-        //
 
-//        dd($request->all());
-//        Validator::make($request->all(), [
-//            'pname' => 'required|max:255',
-//            'description' => 'required',
-//            'img'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-//        ])->validate();
         if($request->hasFile('img')) {
 
             $image = $request->file('img');

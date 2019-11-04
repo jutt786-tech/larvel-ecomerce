@@ -26,6 +26,7 @@
         "@ckeditor/ckeditor5-build-classic": "^12.4.0",
         "@ckeditor/ckeditor5-core": "^12.3.0",
         "feather-icons": "^4.24.1",
-        "select2": "^4.0.10"
+        "select2": "^4.0.10",
+        "sweetalert2": "^8.18.4"
     }
 }

@@ -23,31 +23,40 @@
                         </div>
                         <span class="text-muted">{{$product['price'] * $product['quantity']}}</span>
                     </li>
+
                 @endforeach
 
                 <li class="list-group-item d-flex justify-content-between">
                     <span>{{$totalQty}} </span>
                     <strong>$Total Qty</strong>
                 </li>
+
                 <li class="list-group-item d-flex justify-content-between">
-                    <span>(USD){{$totalPrice}} </span>
+                    <span>{{Session::get('coupon')['cvalue']}} </span>
+                    <strong>$Coupon Code</strong>
+                </li>
+
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>{{$totalPrice}} </span>
+                    <strong>$Sub Total</strong>
+                </li>
+
+
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>$ @if(isset(session()->get('coupon')['totalsum']))
+                            {{ $totalPrice - session()->get('coupon')['cvalue'] }}
+                        @else
+                            {{$totalPrice}}
+                        @endif </span>
                     <strong>$Total Price</strong>
                 </li>
             </ul>
 
-{{--            --}}{{--           <form class="card p-2">--}}
-{{--                          @csrf--}}
-{{--                        <div class="input-group">--}}
-{{--                          <input type="text" class="form-control" placeholder="Promo code">--}}
-{{--                          <div class="input-group-append">--}}
-{{--                            <button type="submit" class="btn btn-secondary">Redeem</button>--}}
-{{--                          </div>--}}
-{{--                        </div>--}}
-{{--                      </form> --}}
         </div>
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Billing address</h4>
-            <form class="needs-validation" novalidate="" action="" method="post">
+            <form class="needs-validation" novalidate="" id="payment-form" action="{{route('checkout.store')}}" method="post">
                 @csrf
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -214,7 +223,25 @@
                     </div>
                 </div>
                 <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+                <section class="mt-5">
+{{--                    <form action="{{route('charge.payment')}}" method="post" id="payment-form">--}}
+                        @csrf
+                        <div class="form-row">
+                            <label for="card-element">
+                                Credit or debit card
+                            </label>
+                            <div id="card-element">
+                                <!-- A Stripe Element will be inserted here. -->
+                            </div>
+
+                            <!-- Used to display form errors. -->
+                            <div id="card-errors" role="alert"></div>
+                        </div>
+
+                        <button class="btn-primary">Submit Payment</button>
+{{--                    </form>--}}
+                </section>
+{{--                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>--}}
             </form>
         </div>
     </div>
@@ -222,14 +249,84 @@
 @endsection
 @section('script')
     <script>
-       $(function () {
-           $("#same-address").on('change', function () {
-               $("#shipping_address").slideToggle(!this.checked)
-           });
+        // Create a Stripe client.
+        var stripe = Stripe('pk_test_aSvXoHFvTnWJ266r2lfaz7bD00mCSf3QKU');
 
-       });
+        // Create an instance of Elements.
+        var elements = stripe.elements();
 
-       </script>
+        // Custom styling can be passed to options when creating an Element.
+        // (Note that this demo uses a wider set of styles than the guide below.)
+        var style = {
+            base: {
+                color: '#32325d',
+                fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                fontSmoothing: 'antialiased',
+                fontSize: '16px',
+                '::placeholder': {
+                    color: '#aab7c4'
+                }
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a'
+            }
+        };
+
+        // Create an instance of the card Element.
+        var card = elements.create('card', {style: style});
+
+        // Add an instance of the card Element into the `card-element` <div>.
+        card.mount('#card-element');
+
+        // Handle real-time validation errors from the card Element.
+        card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Handle form submission.
+        var form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+                if (result.error) {
+                    // Inform the user if there was an error.
+                    var errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Send the token to your server.
+                    stripeTokenHandler(result.token);
+                }
+            });
+        });
+
+        // Submit the form with the token ID.
+        function stripeTokenHandler(token) {
+            // Insert the token ID into the form so it gets submitted to the server
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            // Submit the form
+            form.submit();
+        }
+
+        $(function(){
+            $('#same-address').on('change', function(){
+                $('#shipping_address').slideToggle(!this.checked)
+            })
+        })
+
+    </script>
 @endsection
 
 

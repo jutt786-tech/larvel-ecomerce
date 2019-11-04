@@ -115,3 +115,220 @@ body {
     top:-20px;
     border-radius:50%;
 }
+
+
+
+ //first  codepen css working
+@import url('http://fonts.googleapis.com/css?family=Raleway:400,900,700|Open+Sans:300,400,600,700');
+
+.bold {
+    font-weight:900;
+}
+.dropdown {
+    position: relative;
+}
+.nav {
+    margin-bottom: 20px;
+    margin-left: 0;
+    list-style: none;
+}
+
+.nav > li > a {
+    display: block;
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+    text-decoration: none;
+    background-color: #eeeeee;
+}
+
+.nav > .dropdown.active > a:hover,
+.nav > .dropdown.active > a:focus {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    *border-right-width: 0;
+    *border-bottom-width: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+
+}
+.dropdown-menu .dropdown i {
+    position:absolute;
+    right:0;
+    margin-top:3px;
+    padding-left:20px;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    -webkit-border-radius: 0 0 0 0;
+    -moz-border-radius: 0 0 0 0;
+    border-radius: 0 0 0 0;
+}
+
+ul.nav li.dropdown a {
+    z-index:1000;
+    display:block;
+}
+
+ul.nav li.dropdown ul li ul.dropdown-menu {
+    margin-left:0px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
+
+ul.nav li.dropdown ul li i {
+    margin-right:20px;
+}
+
+select.selectmenu {
+    display:none;
+}
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 180px;
+    padding: 0;
+    margin: 2px 0 0;
+    list-style: none;
+    background: #343434;
+    border: none;
+    border: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border:2px solid #302f2f;
+    border-top:none;
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+}
+.dropdown-menu li {
+    margin:0;
+    padding:0;
+}
+
+.dropdown-menu li  a {
+    color: #ddd;
+    font-size:12px;
+    padding:10px 15px 10px 15px;
+    margin:0;
+    text-shadow:none;
+    border-bottom:1px solid #303030;
+    text-decoration:none;
+}
+
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+    color: #ffffff;
+    text-decoration: none;
+    background-image: none;
+    background-image: none;
+    background-image: none;
+    background-image: none;
+    background-image: none;
+    filter:none;
+}
+.dropdown-menu .sub-menu-level1, .dropdown-menu .sub-menu-level2 {left:100%;position:absolute;top:0;visibility:hidden;margin-top: 0;}
+.dropdown-menu li:hover .sub-menu-level1 {visibility:visible;}
+.dropdown-menu li li:hover .sub-menu-level2 {visibility:visible;}
+
+
+
+.nav-wrap {
+    width: 100%;
+    margin: 1em auto 0;
+}
+@media (min-width: 992px) {
+    .nav-wrap {
+        width: 50%;
+    }
+}
+
+[hidden] {
+    display: none;
+    visibility: hidden;
+}
+
+.acnav {
+    width: 100%;
+}
+.acnav__list {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+.acnav__list--level1 {
+    border: 1px solid #fcfcfc;
+}
+.has-children > .acnav__label::before {
+    content: "\f067";
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    margin-right: 1em;
+    transition: transform .3s;
+}
+.has-children.is-open > .acnav__label::before {
+    transform: rotate(405deg);
+}
+.acnav__link, .acnav__label {
+    display: block;
+    font-size: 1rem;
+    padding: 1em;
+    margin: 0;
+    cursor: pointer;
+    color: #fcfcfc;
+    background: #317589;
+    box-shadow: inset 0 -1px #3988a0;
+    transition: color .25s ease-in, background-color .25s ease-in;
+}
+.acnav__link:focus, .acnav__link:hover, .acnav__label:focus, .acnav__label:hover {
+    color: #e3e3e3;
+    background: #2d6b7e;
+}
+.acnav__link--level2, .acnav__label--level2 {
+    padding-left: 3em;
+    background: #2d6b7e;
+}
+.acnav__link--level2:focus, .acnav__link--level2:hover, .acnav__label--level2:focus, .acnav__label--level2:hover {
+    background: #296272;
+}
+.acnav__link--level3, .acnav__label--level3 {
+    padding-left: 5em;
+    background: #296272;
+}
+.acnav__link--level3:focus, .acnav__link--level3:hover, .acnav__label--level3:focus, .acnav__label--level3:hover {
+    background: #255867;
+}
+.acnav__link--level4, .acnav__label--level4 {
+    padding-left: 7em;
+    background: #255867;
+}
+.acnav__link--level4:focus, .acnav__link--level4:hover, .acnav__label--level4:focus, .acnav__label--level4:hover {
+    background: #214f5c;
+}
+.acnav__list--level2, .acnav__list--level3, .acnav__list--level4 {
+    display: none;
+}
+.is-open > .acnav__list--level2, .is-open > .acnav__list--level3, .is-open > .acnav__list--level4 {
+    display: block;
+}
+
+
+
+
+
+

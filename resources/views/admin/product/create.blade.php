@@ -87,7 +87,7 @@
                     <div class="form-group row">
                         <div class="col-md-8 col-md-offset-2">
                             <label for="discount_price">Discount Price %</label>
-                            <input id="net" readonly onload="sum()" value="{{isset($product->discount_price) ? $product->discount_price : ''}}" type="text" class="form-control @error('discount_price') is-invalid @enderror"   name="discount_price"  placeholder="Enter your discount_price">
+                            <input id="net" readonly onclick="sum()" value="{{isset($product->discount_price) ? $product->discount_price : ''}}" type="text" class="form-control @error('discount_price') is-invalid @enderror"   name="discount_price"  placeholder="Enter your discount_price">
                             @error('discount_price')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>

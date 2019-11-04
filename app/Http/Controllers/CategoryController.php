@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         //
-      $categories = Category::with('children')->get();
+      $categories = Category::with('categories')->get();
 
         return view('admin.category.index',compact('categories'));
     }
@@ -30,7 +30,6 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
       $categories = Category::all();
         return  view('admin.category.create',compact('categories'));
     }
@@ -41,7 +40,7 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request )
     {
 
         Validator::make($request->all(), [
@@ -51,9 +50,11 @@ class CategoryController extends Controller
 
       $cate=  Category::create([
             'title' =>$request->title,
-            'description' => $request->description
+            'description' => $request->description,
+          'category_id' => $request->parent_id
         ]);
-      $cate->children()->attach($request->parent_id);
+
+
       return  redirect(route('admin.category.index'))->with('message','Category inserted sucessfully');
 
     }

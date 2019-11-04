@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail\VerifyUserEmail;
+
 
 class RegisterController extends Controller
 {
@@ -49,7 +52,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            // 'name' => ['required', 'string', 'max:255'],
+             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -63,13 +66,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         $user= User::create([
-            // 'name' => $data['name'],
+             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-        if ($user){
-            return redirect(route('login'));
-        }
+        return  $user;
+
+//        if ($user){
+//            return redirect(route('login'));
+//        }
     }
 }
+
+

@@ -16,15 +16,16 @@ class AdminAuthenticate
      */
     public function handle($request, Closure $next)
     {
-
-
-
         if (auth()->user()->role->name == 'admin'){
             return redirect(route('admin.dashboard'));
-        }else{
 
+        }elseif (auth()->user()->role->name == 'user'){
+//                return redirect()->back();
+            return redirect(route('home'));
+        }else{
             return redirect(route('login'));
         }
+
         return $next($request);
     }
 }

@@ -9,3 +9,4 @@ const feather = require('feather-icons');
 feather.replace();
 window.ClassicEditor = require('@ckeditor/ckeditor5-build-classic');
 window.select2= require('select2');
+window.swal = require('sweetalert2');

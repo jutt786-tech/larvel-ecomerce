@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoryParent extends Migration
+class CreateCategoryParentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCategoryParent extends Migration
      */
     public function up()
     {
-        Schema::create('category_parent', function (Blueprint $table) {
+        Schema::create('category_parents', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('parent_id')->default(0);
             $table->unsignedBigInteger('category_id');
@@ -21,6 +21,7 @@ class CreateCategoryParent extends Migration
 
             $table->timestamps();
         });
+
     }
 
     /**
@@ -30,6 +31,6 @@ class CreateCategoryParent extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('category_parent');
+        Schema::dropIfExists('category_parents');
     }
 }

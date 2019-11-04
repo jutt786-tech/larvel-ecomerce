@@ -16,9 +16,9 @@
                             <h4 class="card-title">{{$product->pname}}</h4>
                             <p class="card-text">{!! $product->description !!}</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
+                                <div class="btn-group addto">
                                     <a href="{{route('products.single',$product->id)}}" type="button" class="btn btn-sm btn-outline-secondary">View Product</a>
-                                    <a href="{{route('products.addToCart',$product)}}" type="button" class="btn btn-success btn-sm btn-outline-secondary">Add to Cart</a>
+                                    <a data-id="{{$product->id}}" href="javscript(0)" type="button" class="btn btn-success btn-sm btn-outline-secondary addtocart ">Add to Cart</a>
                                 </div>
                                 <small class="text-muted">9 mins</small>
                             </div>

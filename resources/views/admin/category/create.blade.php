@@ -58,52 +58,55 @@
 
 
 
-                    @if(isset($cat))
+                        @if(isset($cat))
 
                             <div class="form-group row">
-                        <div class="col-md-8 col-md-offset-2">
-                            <label for="Title">Enter Category</label>
-                            @if($cat)
-                                <select  name="parent_id[]" class="form-control parent @error('parent_id') is-invalid @enderror" multiple>
-                                    <option value="0">Parent</option>
-                                    @foreach($cat as $categor)
-                                        <option value="{{$categor->id}}"
-                                            {{ isset($category) && in_array($categor->id, $category->children()->pluck('parent_id')->toarray()) ? 'selected' : '' }}
-                                        >{{$categor->title}}</option>
-                                    @endforeach
-                                </select>
-                            @endif
-                            @error('parent_id')
-                            <span class="invalid-feedback" role="alert">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <label for="Title">Enter Category</label>
+                                    @if($cat)
+                                        <select  name="parent_id[]" class="form-control parent @error('parent_id') is-invalid @enderror" multiple>
+                                            <option value="0">Parent</option>
+                                            @foreach($cat as $categor)
+                                                <option value="{{$categor->id}}"
+                                                    {{ isset($category) && in_array($categor->id, $category->children()->pluck('parent_id')->toarray()) ? 'selected' : '' }}
+                                                >{{$categor->title}}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                    @error('parent_id')
+                                    <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
-                            @enderror
-                        </div>
-                    </div>
-                @else
-                        <div class="form-group row">
-                            <div class="col-md-8 col-md-offset-2">
-                                <label for="Title">Enter Category</label>
-                                @if($categories)
-                                    <select  name="parent_id[]" class="form-control parent @error('parent_id') is-invalid @enderror" multiple>
-                                        <option value="0">Parent</option>
-                                        @foreach($categories as $category)
-                                            <option value="{{$category->id}}">{{$category->title}}</option>
-                                        @endforeach
-                                    </select>
-                                @endif
-                                @error('parent_id')
-                                <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                                @enderror
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
+                        @else
+                            <div class="form-group row">
+                                <div class="col-md-8 col-md-offset-2">
+                                    <label for="Title">Enter Category</label>
+                                    @if($categories)
+                                        <select  name="parent_id" class="form-control parent @error('parent_id') is-invalid @enderror" >
+                                            <option value=" ">Parent</option>
+                                            @foreach($categories as $category)
+                                                <option value="{{$category->id}}">{{$category->title}}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                    @error('parent_id')
+                                    <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                                    @enderror
+                                </div>
+                            </div>
                         @endif
 
                     <div class="form-group row">
                         <div class="col-md-12">
-                            <button class="btn btn-primary" >{{isset($category->id)? 'update' :'Submit'}}</button>
+                            <button class="btn btn-primary" >
+{{--                                {{isset($category->id)? 'update' :'Submit'}}--}}
+                                @if(isset($cat)) {{'Update'}}   @else {{'SUbmit'}} @endif
+                            </button>
                         </div>
                     </div>
 

@@ -9,9 +9,16 @@ use  Session;
 use App\Cart;
 use App\Customer;
 use App\Http\Requests\OrderRequest;
+use Auth;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        return $this->middleware('checkout');
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -19,14 +26,19 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
-        if(!Session::has('cart') || empty(Session::get('cart')) ){
-            return redirect('products')->with('message', 'No Products in the Cart');
-        }
-        $carts = Session::get('cart');
-//        dd($carts);
-        return view('products.checkout', compact('carts'));
+        if(Auth::check()) {
 
+            if (!Session::has('cart') || empty(Session::get('cart') || empty(Session::has('coupon') || (SESSION::get('coupon'))))) {
+                return redirect('products')->with('message', 'No Products in the Cart');
+            }
+
+            $carts = Session::get('cart');
+            $coupons = Session::get('coupon');
+
+            return view('products.checkout', compact('carts', 'coupons'));
+        }else{
+            return  redirect(route('login'));
+        }
     }
 
     /**
@@ -47,13 +59,20 @@ class OrderController extends Controller
      */
     public function store(OrderRequest $request)
     {
-        $cart = [];
-        $customer='';
-        $orders='';
-        if (session()->has('cart')){
-            $cart =session()->get('cart');
+//        $cart = [];
+//        $customer='';
+//        $orders='';
+        $totalqty = 0;
+        $totalprice = 0;
+
+        $carts =session()->get('cart');
+
+        foreach ($carts as $cart) {
+            $totalqty +=$cart['quantity'];
+            $totalprice +=$cart['quantity'] * $cart['price'];
         }
-        //
+        $subtotal =  isset(session()->get('coupon')['cvalue']) ? $totalprice - session()->get('coupon')['cvalue'] : $totalprice;
+
         if (isset($request->billing_lastName) && !empty( $request->shipping_firstName)){
 
             $customer = [
@@ -91,24 +110,38 @@ class OrderController extends Controller
                ];
 
         }
+
         DB::beginTransaction();
         $customer = Customer::create($customer);
-       foreach (session('cart') as $id => $products){
-          $order =[
-               'qty' => $products['quantity'],
-               'price' => $products['price'],
-               'status' => 'pending',
-               'customer_id' => $customer->id,
-               'product_id'=> $id,
 
-           ];
-           $orders =   Order::create($order);
+            $order = [
+                'totalqty'      => $totalqty,
+                'totalprice'    => $subtotal,
+                'status'        => 'pending',
+                'user_id'       => Auth::user()->id,
+                'customer_id'   => $customer->id,
+                'cartdata'      => json_encode($carts),
+                'coupon'        => session()->get('coupon')['cvalue']
+            ];
 
-       }
+            $orders = Order::create($order);
+
+        \Stripe\Stripe::setApiKey('sk_test_mZb1SQyiW5AGyaVWtu4F7f2C00IH8N1mpC');
+        $token = $_POST['stripeToken'];
+        $amount = \Stripe\Charge::create([
+            'amount' => $subtotal,
+            'currency' => 'usd',
+            'source' => $token,
+            'description' => 'sucessfully by: jutt840@gmail.com',
+        ]);
+
+        session()->forget('cart', $carts);
+        session()->put('customer',$customer );
+
        if ($customer && $orders){
            DB::commit();
-           session()->flush();
-           return  redirect(route('product.all'));
+//           session()->flush();
+           return redirect(url('order_list'));
        }else{
            DB::rollBack();
            return back()->with('message','Invalid data ');

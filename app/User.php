@@ -7,7 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Role;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
     // use SoftDeletes
@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-         'email', 'password','role_id',
+       'name', 'email', 'password','role_id',
     ];
 
     /**
@@ -43,5 +43,9 @@ class User extends Authenticatable
 
     public function role(){
        return  $this->belongsTo('App\Role');
+    }
+
+    public function orders(){
+        return $this->hasMany('App\Order');
     }
 }

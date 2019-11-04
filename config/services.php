@@ -34,4 +34,10 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'stripe' => [
+        'model'  => App\Customer::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+    ],
+
 ];
